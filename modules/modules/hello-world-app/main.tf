@@ -20,6 +20,10 @@ module "alb" {
 	alb_name		= "hello-world-${var.environment}"
 	subnet_ids		= data.aws_subnet_ids.default.ids
 }
+
+module "mysql" {
+	source 			= "github.com/vineetranjan0505/modules//modules/modules/mysql"
+}
 	
 data "template_file" "user_data" {
 
@@ -27,8 +31,8 @@ data "template_file" "user_data" {
 
   vars = {
     server_port = var.server_port
-    db_address  = data.terraform_remote_state.db.outputs.address
-    db_port     = data.terraform_remote_state.db.outputs.port
+    db_address  = module.mysql.address
+    db_port     = module.mysql.port
     server_text	= var.server_text
   }
 }
@@ -66,15 +70,15 @@ resource "aws_lb_listener_rule" "asg" {
   }
 }
 
-data "terraform_remote_state" "db" {
-  backend = "s3"
-
-  config = {
-    bucket = var.db_remote_state_bucket
-    key    = var.db_remote_state_key
-    region = "us-east-2"
-  }
-}
+#data "terraform_remote_state" "db" {
+#  backend = "s3"
+#
+# config = {
+#    bucket = var.db_remote_state_bucket
+#    key    = var.db_remote_state_key
+#    region = "us-east-2"
+#  }
+#}
 
 data "aws_vpc" "default" {
   default = true
