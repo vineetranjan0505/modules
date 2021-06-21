@@ -4,16 +4,6 @@ variable "server_port" {
 	default = 8080
 }
 
-#variable "db_remote_state_bucket" {
-#	description 		= "The name of the s3 bucket for database's remote state"
-#	type			= string 
-#}
-
-#variable "db_remote_state_key" {
-#	description 		= "The path for the database's remote state in s3"
-#	type 			= string
-#}
-
 variable "server_text" {
 	description		= "text the web server should return"
 	default 		= "Hello, World"
@@ -50,4 +40,10 @@ variable "custom_tags" {
   description = "Custom tags to set on the Instances in the ASG"
   type        = map(string)
   default     = {}
+}
+
+variable "ami" {
+	description 		= "AMI to run in the cluster"
+	default 		= "ami-0c55b159cbfafe1f0"
+	type			= string
 }
